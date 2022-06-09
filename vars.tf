@@ -26,3 +26,9 @@ variable "private_subnets_cidr" {
   description = "CIDR block for Private Subnet"
   default     = ["10.0.1.128/28","10.0.1.144/28","10.0.1.160/28"]
 }
+
+variable "aws-public-subnets" {
+  type        = list(any)
+  description = "Created public subnets"
+  default = []
+}

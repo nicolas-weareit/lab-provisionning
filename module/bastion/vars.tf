@@ -26,5 +26,9 @@ variable "availability_zones" {
 }
 
 variable "ami_name" {
-    description = "AMI name to use to build Bastion server"
+  description = "AMI name to use to build Bastion server"
+}
+
+variable "public_subnets_config" {
+  description = "List of created public subnets"
 }
