@@ -8,13 +8,6 @@ data "aws_ami" "devops-bastion-ami" {
     owners = ["063871686173"]
 }
 
-# data "aws_subnet" "public_subnet" {
-#  filter {
-#    name = "tag:Name"
-#    values = ["${var.environment}-*-public-subnet"]
-#  }
-#}
-
 resource "aws_network_interface" "bastion_network_interface" {
   count = length(var.public_subnets_cidr)
   subnet_id = element(var.public_subnets_config.*.id, count.index)
