@@ -20,12 +20,12 @@ data "aws_ami" "weare-devops-ami" {
     }
     owners = ["063871686173"]
 }
-resource "aws_instance" "devops_server" {
+resource "aws_instance" "devops_bastion" {
   ami           = data.aws_ami.weare-devops-ami.id
   instance_type = "t2.micro"
 
   tags = {
-    Name        = "devops-server"
+    Name        = "devops-bastion"
     Provisioner = "Terraform"
     Cost_center = "LAB"
     Team = "DevOps"
