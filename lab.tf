@@ -28,4 +28,5 @@ module "Bastion" {
   availability_zones    = local.lab_availability_zones
   ami_name              = local.lab_ami_name
   public_subnets_config = module.Networking.aws-public-subnets
+  security_group        = module.Networking.default_security_group_id
 }

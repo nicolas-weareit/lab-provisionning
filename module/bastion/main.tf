@@ -11,6 +11,7 @@ data "aws_ami" "devops-bastion-ami" {
 resource "aws_network_interface" "bastion_network_interface" {
   count = length(var.public_subnets_cidr)
   subnet_id = element(var.public_subnets_config.*.id, count.index)
+  security_groups = ["${var.security_group}"]
   tags = {
     name = "network_interface-${count.index}"
     Environment = "${var.environment}"
@@ -26,6 +27,7 @@ resource "aws_instance" "devops_bastion" {
   count         = (length(var.availability_zones)-1)
   instance_type = "t2.micro"
   # hibernation   = true
+  
   network_interface {
     network_interface_id = element(aws_network_interface.bastion_network_interface.*.id, count.index)
     device_index         = 0

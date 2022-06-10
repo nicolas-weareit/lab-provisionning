@@ -32,3 +32,8 @@ variable "aws-public-subnets" {
   description = "Created public subnets"
   default = []
 }
+
+variable "security_group" {
+  description = "Security group"
+  default = ""
+}
