@@ -33,6 +33,6 @@ variable "public_subnets_config" {
   description = "List of created public subnets"
 }
 
-variable "security_group" {
-  description = "Security group"
+variable "public_security_group" {
+  description = "Public subnets dedciated security group"
 }
