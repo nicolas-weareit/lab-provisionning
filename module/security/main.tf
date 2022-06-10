@@ -24,7 +24,7 @@ resource "aws_security_group" "public_subnet_allowed" {
     from_port = "0"
     to_port   = "0"
     protocol  = "-1"
-    self      = true
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
@@ -60,7 +60,7 @@ resource "aws_security_group" "private_subnet_allowed" {
     from_port = "0"
     to_port   = "0"
     protocol  = "-1"
-    self      = true
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
