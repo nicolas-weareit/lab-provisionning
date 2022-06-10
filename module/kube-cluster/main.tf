@@ -8,19 +8,6 @@ data "aws_ami" "weare-ami" {
     owners = ["063871686173"]
 }
 
-#resource "aws_network_interface" "k8s-master_network_interface" {
-#  subnet_id = var.private_subnets_config.1.id
-#  security_groups = ["${var.private_security_group}"]
-#  tags = {
-#    name = "k8s-master_network_interface"
-#    Environment = "${var.environment}"
-#    Provisioner = "Terraform"
-#    Cost_center = "${var.environment}"
-#    Team = "DevOps"
-#    Environment = "${var.environment}"
-#  }
-#}
-
 resource "aws_instance" "k8s-master_instance" {
   ami           = data.aws_ami.weare-ami.id
   instance_type = "t2.micro"

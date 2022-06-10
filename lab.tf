@@ -5,6 +5,7 @@ resource "random_id" "random_id_prefix" {
 locals {
   lab_availability_zones = ["${var.region}a", "${var.region}b", "${var.region}c"]
   lab_ami_name = "weare-packer-dev-aws"
+  lab_k8s-ami_name = "weare-packer-k8s"
 }
 
 module "Networking" {
@@ -48,12 +49,12 @@ module "Kube-cluster" {
     module.Networking,
     module.Security
   ]
-  region                = var.region
-  environment           = var.environment
-  vpc_cidr              = var.vpc_cidr
-  private_subnets_cidr  = var.private_subnets_cidr
-  availability_zones    = local.lab_availability_zones
-  ami_name              = local.lab_ami_name
-  private_subnets_config = module.Networking.aws-private-subnets
-  private_security_group = module.Security.private_security_group_id
+  region                  = var.region
+  environment             = var.environment
+  vpc_cidr                = var.vpc_cidr
+  private_subnets_cidr    = var.private_subnets_cidr
+  availability_zones      = local.lab_availability_zones
+  ami_name                = local.lab_k8s-ami_name
+  private_subnets_config  = module.Networking.aws-private-subnets
+  private_security_group  = module.Security.private_security_group_id
 }
