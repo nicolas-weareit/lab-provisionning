@@ -1,5 +1,6 @@
 #Dedicated networks for the lab
 
+# VPC creation
 resource "aws_vpc" "vpc" {
   cidr_block = var.vpc_cidr
   instance_tenancy = "default"
@@ -15,7 +16,7 @@ resource "aws_vpc" "vpc" {
   }
 }
 
-# Internet Gateway for Public Subnet
+# Internet Gateway
 resource "aws_internet_gateway" "ig" {
   vpc_id = aws_vpc.vpc.id
   tags = {
@@ -26,6 +27,7 @@ resource "aws_internet_gateway" "ig" {
     Environment = var.environment
   }
 }
+
 
 # Subnets
 resource "aws_subnet" "public_subnet" {
@@ -84,16 +86,23 @@ resource "aws_route_table" "public" {
   }
 }
 
-# Route for Internet Gateway
+# Route for Internet Gateway - Public Subnets
 resource "aws_route" "public_internet_gateway" {
   route_table_id         = aws_route_table.public.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.ig.id
 }
 
+# Route for Internet Gateway - Private Subnets
+resource "aws_route" "private_internet_gateway" {
+  route_table_id         = aws_route_table.private.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.ig.id
+}
+
 # Route table associations for both Public & Private Subnets
 resource "aws_route_table_association" "public" {
-  count          = length(var.private_subnets_cidr)
+  count          = length(var.public_subnets_cidr)
   subnet_id      = element(aws_subnet.public_subnet.*.id, count.index)
   route_table_id = aws_route_table.public.id
 }
