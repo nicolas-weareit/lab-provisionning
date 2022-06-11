@@ -27,7 +27,7 @@ resource "aws_instance" "devops_bastion" {
   count         = (length(var.availability_zones)-1)
   instance_type = "t2.micro"
   # hibernation   = true
-  
+  key_name = "EC2Tutorial"
   network_interface {
     network_interface_id = element(aws_network_interface.bastion_network_interface.*.id, count.index)
     device_index         = 0

@@ -15,10 +15,7 @@ resource "aws_instance" "k8s-master_instance" {
   associate_public_ip_address = false
   subnet_id = var.private_subnets_config.1.id
   vpc_security_group_ids = ["${var.private_security_group}"]
-  # network_interface {
-  #  network_interface_id = aws_network_interface.k8s-master_network_interface.id
-  #  device_index         = 0
-  #}
+  key_name = "EC2Tutorial"
   tags = {
     Name = "k8s-master"
     Environment = "${var.environment}"
