@@ -71,3 +71,28 @@ resource "aws_security_group" "private_subnet_allowed" {
     Team = "DevOps"
   }
 }
+
+# Key Pair generation
+resource "aws_key_pair" "k8s" {
+  key_name = "${var.environment}-k8s-key"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC4ZhuuHXWzqFhEhTdC3uN+5QYWQNrbcwyf/OGJMobPPt3UHxkIF0pPUusxyl3j2J0m+PEKCH+56ZctZ4MB3kaq/jrsBdxDKmtI0dIasA4ZfZfRBsdJAn3FFbqfnZIAyV0Kmq4MBSsM/BnG6/56b+xeMRxy83kRU8gne4B+BHd5f0FlLW9i2rcY+kqb6N3OqY8r4o7JUzpds7gUf3UkUbwSyt2EA7rpvuSvl5gX+FPo2513sZeagOmHNbSCWwCiQAZzo8QmIUcGc0IumIA07Rzpzu6JCBdLl2fswDO6DuIYOYy5gUtCZOQSR4af4ZIqmlnceEQSghnJiajU+kO5pfAPqNEcDMk15bBx8SORVasW0nGoXjn3jM8cUrxh61Jifxb6jZOPq5dGGvxkIn9TyFfEybb8W7nUBIEE4m6Q0duSCOhCk38QExF0s56Ia60AMMjCvYYdFeGnFmgH4H/caw7yNGBaMLrpffQdZhMKnVfyKZHNCGhFjQhB5HuTOX+Sdnt9NneX50mYBTFIZsWhSyDhXoPGNusWSp7Jx0ZYq6djMbWJP0Dtq687Wt4uCMSG7QkuriLWqR5Ouo8zcS6wut93hqgvlgt5omghGCy6d3tnaaHfBt00O+/hR4X3+BTYz6zU5xfAeSxy3mZ9JKnR5lnU4YpmtB+w2fS5+BT3S4gsmQ== lab-k8s"
+  tags = {
+    Name = "${var.environment}-k8s-key"
+    Environment = "${var.environment}"
+    Provisioner = "Terraform"
+    Cost_center = var.environment
+    Team = "DevOps"
+  }
+}
+
+resource "aws_key_pair" "bastion" {
+  key_name = "${var.environment}-bastion-key"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDF4SAQrTX+re9B2h4zEZtPZUSIXBtLySvptR540ywb7/7A/iUh1MIsLlxDppIwH5veKphoYIZg5vslnwc9ugOvZoJm5ZoIvsW42yGLxPeCuOxAEwWlv5GdgwrgKr7wPBg/47dQYloDPrDbPFtYxEVw6ADLtxhgfwnTJyQ3UvWR7VVLQGUbxU7pk5gSUzrQKIILhEsrCwrQUDmvKSwTS9q2F/p/SCduEnoex+rU2MP7x6thX4CCWG+qE3gw2sE/iuR+4ro8PYgoIuyGyKiYUnK4pLBZpDICelaRilH2cOympFEn4/IQauurjQvC47i3LxoG0HnIk/Sxr1C7KFm0M0WxxqVvD6VmYbMEDtpGsMfC9KibaC0vn1D8GP2S9QNHebZ1zQ5mqDuO+fXdAt0wCBI4iJOuhXLOO5bXglV3D+6G54/zkiZevc4SN0htetXSfmacqp7S9yU7go1EeYAQYiHIR7bBXgtmAsoLpSkLuFXxVrBy2MvDBbegYQRSbElKfyghwyKjOR52woXWhXfey8+C8PT/y0eCNuiwxNZR1tea3bi1jxVN5YfNzjdZC6Gy7U6hdnbnji2u6Caq0UdUcIkjLNSbAr5nUO+CfXQYP40GNfjPPNGS5tguGlHdh55UMMBfff0v+k7DQkagmcUsiEYJzyDAmH2yq4PSsNxMFjNvOw== lab-bastion"
+  tags = {
+    Name = "${var.environment}-bastion-key"
+    Environment = "${var.environment}"
+    Provisioner = "Terraform"
+    Cost_center = var.environment
+    Team = "DevOps"
+  }
+}
