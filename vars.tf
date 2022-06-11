@@ -21,9 +21,9 @@ variable "public_subnets_cidr" {
   default     = ["10.0.1.0/28","10.0.1.16/28","10.0.1.32/28"]
 }
 
-variable "private_subnets_cidr" {
+variable "k8s_subnets_cidr" {
   type        = list(any)
-  description = "CIDR block for Private Subnet"
+  description = "CIDR block for k8s Subnet"
   default     = ["10.0.1.128/28","10.0.1.144/28","10.0.1.160/28"]
 }
 

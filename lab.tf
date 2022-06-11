@@ -14,7 +14,7 @@ module "Networking" {
   environment          = var.environment
   vpc_cidr             = var.vpc_cidr
   public_subnets_cidr  = var.public_subnets_cidr
-  private_subnets_cidr = var.private_subnets_cidr
+  k8s_subnets_cidr = var.k8s_subnets_cidr
   availability_zones   = local.lab_availability_zones
 }
 
@@ -23,7 +23,7 @@ module "Security" {
   depends_on = [module.Networking]
   environment   = var.environment
   public_subnets_cidr  = var.public_subnets_cidr
-  private_subnets_cidr = var.private_subnets_cidr
+  k8s_subnets_cidr = var.k8s_subnets_cidr
   vpc_id = module.Networking.vpc_id
 }
 module "Bastion" {
@@ -36,7 +36,6 @@ module "Bastion" {
   environment           = var.environment
   vpc_cidr              = var.vpc_cidr
   public_subnets_cidr   = var.public_subnets_cidr
-  private_subnets_cidr  = var.private_subnets_cidr
   availability_zones    = local.lab_availability_zones
   ami_name              = local.lab_ami_name
   public_subnets_config = module.Networking.aws-public-subnets
@@ -52,9 +51,9 @@ module "Kube-cluster" {
   region                  = var.region
   environment             = var.environment
   vpc_cidr                = var.vpc_cidr
-  private_subnets_cidr    = var.private_subnets_cidr
+  k8s_subnets_cidr    = var.k8s_subnets_cidr
   availability_zones      = local.lab_availability_zones
   ami_name                = local.lab_k8s-ami_name
-  private_subnets_config  = module.Networking.aws-private-subnets
-  private_security_group  = module.Security.private_security_group_id
+  k8s_subnets_config  = module.Networking.aws-k8s-subnets
+  k8s_security_group  = module.Security.k8s_security_group_id
 }

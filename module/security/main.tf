@@ -36,9 +36,9 @@ resource "aws_security_group" "public_subnet_allowed" {
   }
 }
 
-# Allow ports from public subnet to private ones
-resource "aws_security_group" "private_subnet_allowed" {
-  name = "${var.environment}-private-subnets-sg"
+# Allow ports from public subnet to k8s ones
+resource "aws_security_group" "k8s_subnet_allowed" {
+  name = "${var.environment}-k8s-subnets-sg"
   description = "Allowed incoming ports"
   vpc_id = var.vpc_id
   ingress {
@@ -64,7 +64,7 @@ resource "aws_security_group" "private_subnet_allowed" {
   }
 
   tags = {
-    Name = "${var.environment}-private-subnets-sg"
+    Name = "${var.environment}-k8s-subnets-sg"
     Environment = "${var.environment}"
     Provisioner = "Terraform"
     Cost_center = var.environment

@@ -6,9 +6,9 @@ variable "vpc_cidr" {
   description = "CIDR block of the vpc"
 }
 
-variable "private_subnets_cidr" {
+variable "k8s_subnets_cidr" {
   type        = list
-  description = "CIDR block for Private Subnet"
+  description = "CIDR block for k8s Subnet"
 }
 
 variable "region" {
@@ -24,10 +24,10 @@ variable "ami_name" {
   description = "AMI name to use to build Bastion server"
 }
 
-variable "private_subnets_config" {
-  description = "List of created private subnets"
+variable "k8s_subnets_config" {
+  description = "List of created k8s subnets"
 }
 
-variable "private_security_group" {
-  description = "Private subnets dedciated security group"
+variable "k8s_security_group" {
+  description = "k8s subnets dedciated security group"
 }

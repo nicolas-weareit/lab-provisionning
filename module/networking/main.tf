@@ -46,15 +46,15 @@ resource "aws_subnet" "public_subnet" {
   }
 }
 
-resource "aws_subnet" "private_subnet" {
+resource "aws_subnet" "k8s_subnet" {
   vpc_id                  = aws_vpc.vpc.id
-  count                   = length(var.private_subnets_cidr)
-  cidr_block              = element(var.private_subnets_cidr, count.index)
+  count                   = length(var.k8s_subnets_cidr)
+  cidr_block              = element(var.k8s_subnets_cidr, count.index)
   availability_zone       = element(var.availability_zones, count.index)
-  map_public_ip_on_launch = false
+  map_public_ip_on_launch = true
 
   tags = {
-    Name        = "${var.environment}-${element(var.availability_zones, count.index)}-private-subnet"
+    Name        = "${var.environment}-${element(var.availability_zones, count.index)}-k8s-subnet"
     Provisioner = "Terraform"
     Cost_center = var.environment
     Team = "DevOps"
@@ -62,11 +62,11 @@ resource "aws_subnet" "private_subnet" {
   }
 }
 
-# Routing tables to route traffic for Private Subnets
-resource "aws_route_table" "private" {
+# Routing tables to route traffic for k8s Subnets
+resource "aws_route_table" "k8s" {
   vpc_id = aws_vpc.vpc.id
   tags = {
-    Name        = "${var.environment}-private-route-table"
+    Name        = "${var.environment}-k8s-route-table"
     Provisioner = "Terraform"
     Cost_center = var.environment
     Team = "DevOps"
@@ -93,24 +93,24 @@ resource "aws_route" "public_internet_gateway" {
   gateway_id             = aws_internet_gateway.ig.id
 }
 
-# Route for Internet Gateway - Private Subnets
-resource "aws_route" "private_internet_gateway" {
-  route_table_id         = aws_route_table.private.id
+# Route for Internet Gateway - k8s Subnets
+resource "aws_route" "k8s_internet_gateway" {
+  route_table_id         = aws_route_table.k8s.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.ig.id
 }
 
-# Route table associations for both Public & Private Subnets
+# Route table associations for both Public & k8s Subnets
 resource "aws_route_table_association" "public" {
   count          = length(var.public_subnets_cidr)
   subnet_id      = element(aws_subnet.public_subnet.*.id, count.index)
   route_table_id = aws_route_table.public.id
 }
 
-resource "aws_route_table_association" "private" {
-  count          = length(var.private_subnets_cidr)
-  subnet_id      = element(aws_subnet.private_subnet.*.id, count.index)
-  route_table_id = aws_route_table.private.id
+resource "aws_route_table_association" "k8s" {
+  count          = length(var.k8s_subnets_cidr)
+  subnet_id      = element(aws_subnet.k8s_subnet.*.id, count.index)
+  route_table_id = aws_route_table.k8s.id
 }
 
 # Default Security Group of VPC
