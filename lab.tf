@@ -4,7 +4,7 @@ resource "random_id" "random_id_prefix" {
 
 locals {
   lab_availability_zones = ["${var.region}a", "${var.region}b", "${var.region}c"]
-  lab_ami_name = "weare-packer-dev-aws"
+  lab_ami_name = "weare-packer-bastion-aws"
   lab_k8s-ami_name = "weare-packer-k8s"
 }
 
