@@ -12,12 +12,31 @@ resource "aws_instance" "k8s-master_instance" {
   ami           = data.aws_ami.weare-ami.id
   instance_type = "t2.micro"
   # hibernation   = true
+  count = 2
   associate_public_ip_address = true
-  subnet_id = var.k8s_subnets_config.1.id
+  subnet_id = element(var.k8s_subnets_config.*.id, count.index)
   vpc_security_group_ids = ["${var.k8s_security_group}"]
   key_name = "${var.environment}-k8s-key"
   tags = {
-    Name = "k8s-master"
+    Name = "k8s-master-${count.index + 1}"
+    Environment = "${var.environment}"
+    Provisioner = "Terraform"
+    Cost_center = var.environment
+    Team = "DevOps"
+  }
+}
+
+resource "aws_instance" "k8s-node_instance" {
+  ami           = data.aws_ami.weare-ami.id
+  instance_type = "t2.micro"
+  # hibernation   = true
+  count = 2
+  associate_public_ip_address = true
+  subnet_id = element(var.k8s_subnets_config.*.id, count.index)
+  vpc_security_group_ids = ["${var.k8s_security_group}"]
+  key_name = "${var.environment}-k8s-key"
+  tags = {
+    Name = "k8s-node-${count.index + 1}"
     Environment = "${var.environment}"
     Provisioner = "Terraform"
     Cost_center = var.environment
