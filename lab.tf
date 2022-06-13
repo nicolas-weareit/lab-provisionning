@@ -1,6 +1,6 @@
-resource "random_id" "random_id_prefix" {
-  byte_length = 2
-}
+#resource "random_id" "random_id_prefix" {
+#  byte_length = 2
+#}
 
 locals {
   lab_availability_zones = ["${var.region}a", "${var.region}b", "${var.region}c"]

@@ -22,6 +22,5 @@ resource "aws_instance" "k8s-master_instance" {
     Provisioner = "Terraform"
     Cost_center = var.environment
     Team = "DevOps"
-    Environment = var.environment
   }
 }
