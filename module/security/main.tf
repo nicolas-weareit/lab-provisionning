@@ -1,8 +1,7 @@
 # Create and manage security groups and so key pair (?)
-
 # Allow ports from outside to public subnets
-resource "aws_security_group" "public_subnet_allowed" {
-  name = "${var.environment}-public-subnets-sg"
+resource "aws_security_group" "bastion_allowed" {
+  name = "${var.environment}-bastion-sg"
   description = "Allowed incoming ports"
   vpc_id = var.vpc_id
   ingress {
@@ -28,7 +27,7 @@ resource "aws_security_group" "public_subnet_allowed" {
   }
 
   tags = {
-    Name = "${var.environment}-public-subnets-sg"
+    Name = "${var.environment}-bastion-sg"
     Environment = "${var.environment}"
     Provisioner = "Terraform"
     Cost_center = var.environment
@@ -37,23 +36,71 @@ resource "aws_security_group" "public_subnet_allowed" {
 }
 
 # Allow ports from public subnet to k8s ones
-resource "aws_security_group" "k8s_subnet_allowed" {
-  name = "${var.environment}-k8s-subnets-sg"
+resource "aws_security_group" "k8s_master" {
+  name = "${var.environment}-k8s_master-sg"
   description = "Allowed incoming ports"
   vpc_id = var.vpc_id
   ingress {
-    description = "SSH allowed"
+    description = "SSH from bastion server"
     from_port = 22
     to_port = 22
     protocol = "tcp"
-    cidr_blocks = var.public_subnets_cidr
+    # cidr_blocks = var.public_subnets_cidr
+    security_groups = [aws_security_group.bastion_allowed.id]
   }
   ingress {
     description = "HTTPS allowed"
     from_port = 443
     to_port = 443
     protocol = "tcp"
-    cidr_blocks = var.public_subnets_cidr
+    # cidr_blocks = var.public_subnets_cidr
+    security_groups = [aws_security_group.bastion_allowed.id]
+  }
+
+  ingress {
+    description = "Allow all communication in the same vlan"
+    from_port = "0"
+    to_port = "0"
+    protocol = "-1"
+    cidr_blocks = var.k8s_subnets_cidr
+  }
+  
+  egress {
+    from_port = "0"
+    to_port   = "0"
+    protocol  = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${var.environment}-k8s_master-sg"
+    Environment = "${var.environment}"
+    Provisioner = "Terraform"
+    Cost_center = var.environment
+    Team = "DevOps"
+  }
+}
+
+# Allow ports for k8s nodes
+resource "aws_security_group" "k8s_node" {
+  name = "${var.environment}-k8s_node-sg"
+  description = "Allowed incoming ports"
+  vpc_id = var.vpc_id
+  ingress {
+    description = "SSH from bastion server and master nodes"
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    # cidr_blocks = var.public_subnets_cidr
+    security_groups = [aws_security_group.bastion_allowed.id]
+  }
+  
+  ingress {
+    description = "Allow all communication in the same vlan"
+    from_port = "0"
+    to_port = "0"
+    protocol = "-1"
+    cidr_blocks = var.k8s_subnets_cidr
   }
 
   egress {
@@ -64,7 +111,7 @@ resource "aws_security_group" "k8s_subnet_allowed" {
   }
 
   tags = {
-    Name = "${var.environment}-k8s-subnets-sg"
+    Name = "${var.environment}-k8s_node-sg"
     Environment = "${var.environment}"
     Provisioner = "Terraform"
     Cost_center = var.environment

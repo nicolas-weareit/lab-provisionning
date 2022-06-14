@@ -15,7 +15,7 @@ resource "aws_instance" "k8s-master_instance" {
   count = 2
   associate_public_ip_address = true
   subnet_id = element(var.k8s_subnets_config.*.id, count.index)
-  vpc_security_group_ids = ["${var.k8s_security_group}"]
+  vpc_security_group_ids = ["${var.k8s-master_security_group}"]
   key_name = "${var.environment}-k8s-key"
   tags = {
     Name = "k8s-master-${count.index + 1}"
@@ -33,7 +33,7 @@ resource "aws_instance" "k8s-node_instance" {
   count = 2
   associate_public_ip_address = true
   subnet_id = element(var.k8s_subnets_config.*.id, count.index)
-  vpc_security_group_ids = ["${var.k8s_security_group}"]
+  vpc_security_group_ids = ["${var.k8s-node_security_group}"]
   key_name = "${var.environment}-k8s-key"
   tags = {
     Name = "k8s-node-${count.index + 1}"

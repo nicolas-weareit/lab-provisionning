@@ -28,6 +28,10 @@ variable "k8s_subnets_config" {
   description = "List of created k8s subnets"
 }
 
-variable "k8s_security_group" {
-  description = "k8s subnets dedciated security group"
+variable "k8s-master_security_group" {
+  description = "k8s master node dedicated security group"
+}
+
+variable "k8s-node_security_group" {
+  description = "k8s simple node dedicated security group"
 }
