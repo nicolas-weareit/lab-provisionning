@@ -1,0 +1,21 @@
+---
+name: Terraform build
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  terraform_build_weare:
+    runs-on: ubuntu-latest
+    name: Terraform
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+      - name: Terraform format
+        id: fmt
+        run: terraform fmt -check

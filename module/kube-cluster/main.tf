@@ -5,7 +5,7 @@ data "aws_ami" "weare-ami" {
         name = "name"
         values = ["${var.ami_name}"]
     }
-    owners = ["063871686173"]
+    owners = ["170619833643"]
 }
 
 resource "aws_instance" "k8s-master_instance" {
