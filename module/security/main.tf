@@ -58,6 +58,15 @@ resource "aws_security_group" "k8s_master" {
   }
 
   ingress {
+    description = "Kube control plane allowed"
+    from_port = 6443
+    to_port = 6443
+    protocol = "tcp"
+    # cidr_blocks = var.public_subnets_cidr
+    security_groups = [aws_security_group.bastion_allowed.id]
+  }
+
+  ingress {
     description = "Allow all communication in the same vlan"
     from_port = "0"
     to_port = "0"
