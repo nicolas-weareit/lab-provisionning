@@ -10,9 +10,12 @@ data "aws_ami" "weare-ami" {
 
 resource "aws_instance" "k8s-master_instance" {
   ami           = data.aws_ami.weare-ami.id
-  instance_type = "t2.micro"
+  instance_type = "t3a.medium"
+  root_block_device {
+    volume_size = 40
+  }
   # hibernation   = true
-  count = 2
+  count = 1
   associate_public_ip_address = true
   subnet_id = element(var.k8s_subnets_config.*.id, count.index)
   vpc_security_group_ids = ["${var.k8s-master_security_group}"]
@@ -28,7 +31,7 @@ resource "aws_instance" "k8s-master_instance" {
 
 resource "aws_instance" "k8s-node_instance" {
   ami           = data.aws_ami.weare-ami.id
-  instance_type = "t2.micro"
+  instance_type = "t3a.medium"
   # hibernation   = true
   count = 2
   associate_public_ip_address = true
