@@ -37,3 +37,30 @@ variable "security_group" {
   description = "Security group"
   default = ""
 }
+
+variable "lab_availability_zones" {
+  default = ""
+}
+
+variable "lab_ami_name" {
+  default = ""
+}
+variable "lab_bastion_instance-type" {
+  default = ""
+}
+
+variable "lab_k8s-ami_name" {
+  default = ""
+}
+
+variable "lab_k8s-ami_owner" {
+  default = ""
+}
+
+variable "lab_instance-type-controller" {
+  default = ""
+}
+
+variable "lab_instance-type-worker" {
+  default = ""
+}

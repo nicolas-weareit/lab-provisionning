@@ -1,7 +1,7 @@
 .terraform.lock.hcl
 terraform.tfstate*
 .terraform/
-terraform.tfvars
 *lock*
 ssh-keys/
 .DS_Store
+keys.tfvars
