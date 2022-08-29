@@ -38,7 +38,7 @@ resource "aws_instance" "k8s-controller_instance" {
 
 resource "aws_instance" "k8s-node_instance" {
   ami           = data.aws_ami.weare-ami.id
-  instance_type = "t3a.medium"
+  instance_type = "${var.instance-type-worker}"
   # hibernation   = true
   count = 2
   associate_public_ip_address = true
