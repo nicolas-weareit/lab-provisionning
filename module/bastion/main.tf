@@ -20,11 +20,11 @@ resource "aws_instance" "devops_bastion" {
   user_data = <<EOF
   #!/bin/bash
   echo "Changing Hostname"
-  hostname "bastion-${count.index+1}"
-  echo "bastion-${count.index+1}" > /etc/hostname
+  hostname "bastion${count.index}"
+  echo "bastion${count.index}" > /etc/hostname
   EOF
   tags = {
-    Name = "bastion-${count.index + 1}"
+    Name = "bastion${count.index}"
     Environment = "${var.environment}"
     Provisioner = "Terraform"
     Cost_center = var.environment
