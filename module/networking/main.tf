@@ -141,3 +141,20 @@ resource "aws_security_group" "default" {
     Team = "DevOps"
   }
 }
+
+# Default route53 zone
+resource "aws_route53_zone" "private" {
+  name = "lab.k8s.local"
+  comment = "Private DNS zone for K8S cluster"
+  vpc {
+    vpc_id = aws_vpc.vpc.id
+  }
+  force_destroy = true
+  tags = {
+    Name = "${var.environment}-dn-private"
+    Environment = "${var.environment}"
+    Provisioner = "Terraform"
+    Cost_center = var.environment
+    Team = "DevOps"
+  }
+}
