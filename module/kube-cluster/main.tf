@@ -21,8 +21,14 @@ resource "aws_instance" "k8s-controller_instance" {
   subnet_id = element(var.k8s_subnets_config.*.id, count.index)
   vpc_security_group_ids = ["${var.k8s-controller_security_group}"]
   key_name = "${var.environment}-k8s-key"
+  user_data = <<EOF
+  #!/bin/bash
+  echo "Changing Hostname"
+  hostname "controller${count.index}"
+  echo "controller${count.index}" > /etc/hostname
+  EOF
   tags = {
-    Name = "controller${count.index + 1}"
+    Name = "controller${count.index}"
     Environment = "${var.environment}"
     Provisioner = "Terraform"
     Cost_center = var.environment
@@ -39,8 +45,14 @@ resource "aws_instance" "k8s-node_instance" {
   subnet_id = element(var.k8s_subnets_config.*.id, count.index)
   vpc_security_group_ids = ["${var.k8s-node_security_group}"]
   key_name = "${var.environment}-k8s-key"
+  user_data = <<EOF
+  #!/bin/bash
+  echo "Changing Hostname"
+  hostname "worker${count.index}"
+  echo "worker${count.index}" > /etc/hostname
+  EOF
   tags = {
-    Name = "k8s-node-${count.index + 1}"
+    Name = "worker${count.index}"
     Environment = "${var.environment}"
     Provisioner = "Terraform"
     Cost_center = var.environment
