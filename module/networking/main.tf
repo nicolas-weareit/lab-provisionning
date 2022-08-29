@@ -151,7 +151,7 @@ resource "aws_route53_zone" "private" {
   }
   force_destroy = true
   tags = {
-    Name = "${var.environment}-dn-private"
+    Name = "${var.environment}-dns-private"
     Environment = "${var.environment}"
     Provisioner = "Terraform"
     Cost_center = var.environment
