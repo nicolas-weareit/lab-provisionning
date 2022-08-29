@@ -5,6 +5,7 @@
 locals {
   lab_availability_zones = ["${var.region}a", "${var.region}b", "${var.region}c"]
   lab_ami_name = "weare-packer-bastion-aws"
+  lab_bastion_instance-type = "t2.micro"
   lab_k8s-ami_name = "weare-packer-k8s"
   lab_k8s-ami_owner = "170619833643"
   lab_instance-type-controller = "t3a.medium"
@@ -41,6 +42,8 @@ module "Bastion" {
   public_subnets_cidr   = var.public_subnets_cidr
   availability_zones    = local.lab_availability_zones
   ami_name              = local.lab_ami_name
+  ami_owner             = local.lab_k8s-ami_owner
+  instance-type-bastion = local.lab_bastion_instance-type
   public_subnets_config = module.Networking.aws-public-subnets
   public_security_group = module.Security.public_security_group_id
 }

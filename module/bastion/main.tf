@@ -5,18 +5,24 @@ data "aws_ami" "devops-bastion-ami" {
         name = "name"
         values = ["${var.ami_name}"]
     }
-    owners = ["170619833643"]
+    owners = ["${var.ami_owner}"]
 }
 
 resource "aws_instance" "devops_bastion" {
   ami           = data.aws_ami.devops-bastion-ami.id
   # count         = (length(var.availability_zones)-1)
   count = 1
-  instance_type = "t2.micro"
+  instance_type = "${var.instance-type-bastion}"
   subnet_id = element(var.public_subnets_config.*.id, count.index)
   vpc_security_group_ids = ["${var.public_security_group}"]
   # hibernation   = true
   key_name = "${var.environment}-bastion-key"
+  user_data = <<EOF
+  #!/bin/bash
+  echo "Changing Hostname"
+  hostname "bastion-${count.index+1}"
+  echo "bastion-${count.index+1}" > /etc/hostname
+  EOF
   tags = {
     Name = "bastion-${count.index + 1}"
     Environment = "${var.environment}"

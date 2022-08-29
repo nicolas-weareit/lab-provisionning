@@ -24,6 +24,14 @@ variable "ami_name" {
   description = "AMI name to use to build Bastion server"
 }
 
+variable "ami_owner" {
+  description = "AMI owner to use to build Bastion server"
+}
+
+variable "instance-type-bastion" {
+  description = "AWS instance type"
+}
+
 variable "public_subnets_config" {
   description = "List of created public subnets"
 }
