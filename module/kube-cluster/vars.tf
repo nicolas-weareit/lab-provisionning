@@ -12,7 +12,7 @@ variable "k8s_subnets_cidr" {
 }
 
 variable "region" {
-  description = "Region in which the bastion host will be launched"
+  description = "Region in which the k8s host will be launched"
 }
 
 variable "availability_zones" {
@@ -21,17 +21,29 @@ variable "availability_zones" {
 }
 
 variable "ami_name" {
-  description = "AMI name to use to build Bastion server"
+  description = "AMI name to use to build k8s server"
+}
+
+variable "ami_owner" {
+  description = "AMI owner to use to build k8s server"
 }
 
 variable "k8s_subnets_config" {
   description = "List of created k8s subnets"
 }
 
-variable "k8s-master_security_group" {
-  description = "k8s master node dedicated security group"
+variable "k8s-controller_security_group" {
+  description = "k8s controller node dedicated security group"
 }
 
 variable "k8s-node_security_group" {
   description = "k8s simple node dedicated security group"
+}
+
+variable "instance-type-worker" {
+  description = "Instance type for K8s worker node"
+}
+
+variable "instance-type-controller" {
+  description = "Instance type for K8s controller node"
 }

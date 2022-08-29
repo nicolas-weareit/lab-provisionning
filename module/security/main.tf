@@ -36,8 +36,8 @@ resource "aws_security_group" "bastion_allowed" {
 }
 
 # Allow ports from public subnet to k8s ones
-resource "aws_security_group" "k8s_master" {
-  name = "${var.environment}-k8s_master-sg"
+resource "aws_security_group" "k8s_controller" {
+  name = "${var.environment}-k8s_controller-sg"
   description = "Allowed incoming ports"
   vpc_id = var.vpc_id
   ingress {
@@ -82,7 +82,7 @@ resource "aws_security_group" "k8s_master" {
   }
 
   tags = {
-    Name = "${var.environment}-k8s_master-sg"
+    Name = "${var.environment}-k8s_controller-sg"
     Environment = "${var.environment}"
     Provisioner = "Terraform"
     Cost_center = var.environment
@@ -96,7 +96,7 @@ resource "aws_security_group" "k8s_node" {
   description = "Allowed incoming ports"
   vpc_id = var.vpc_id
   ingress {
-    description = "SSH from bastion server and master nodes"
+    description = "SSH from bastion server and controller nodes"
     from_port = 22
     to_port = 22
     protocol = "tcp"
