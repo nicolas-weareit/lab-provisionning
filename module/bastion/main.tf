@@ -28,6 +28,7 @@ wget -q --show-progress --https-only --timestamping \
 chmod +x cfssl cfssljson
 sudo mv cfssl cfssljson /usr/local/bin/
 
+sudo reboot
 EOF
   tags = {
     Name = "bastion-${count.index}"
