@@ -13,7 +13,7 @@ resource "aws_instance" "k8s-controller_instance" {
   ami           = data.aws_ami.weare-ami.id
   instance_type = "${var.instance-type-controller}"
   root_block_device {
-    volume_size = 40
+    volume_size = 30
   }
   # hibernation   = true
   count = 1
@@ -22,11 +22,11 @@ resource "aws_instance" "k8s-controller_instance" {
   vpc_security_group_ids = ["${var.k8s-controller_security_group}"]
   key_name = "${var.environment}-k8s-key"
   user_data = <<EOF
-  #!/bin/bash
-  echo "Changing Hostname"
-  hostname "controller${count.index}"
-  echo "controller${count.index}" > /etc/hostname
-  EOF
+#!/bin/bash -xe
+sudo apt update
+sudo apt upgrade -y
+sudo hostnamectl set-hostname controller${count.index}.${var.domain_name}
+EOF
   tags = {
     Name = "controller${count.index}"
     Environment = "${var.environment}"
@@ -34,6 +34,16 @@ resource "aws_instance" "k8s-controller_instance" {
     Cost_center = var.environment
     Team = "DevOps"
   }
+}
+
+# Add DNS entry for ressource
+resource "aws_route53_record" "dns_controller" {
+  count = 1
+  zone_id = var.route53_id
+  name = "controller${count.index}.${var.domain_name}"
+  type = "A"
+  ttl = "60"
+  records = ["${element(aws_instance.k8s-controller_instance.*.private_ip, count.index)}"]
 }
 
 resource "aws_instance" "k8s-node_instance" {
@@ -46,11 +56,11 @@ resource "aws_instance" "k8s-node_instance" {
   vpc_security_group_ids = ["${var.k8s-node_security_group}"]
   key_name = "${var.environment}-k8s-key"
   user_data = <<EOF
-  #!/bin/bash
-  echo "Changing Hostname"
-  hostname "worker${count.index}"
-  echo "worker${count.index}" > /etc/hostname
-  EOF
+#!/bin/bash -xe
+sudo apt update
+sudo apt upgrade -y
+sudo hostnamectl set-hostname worker${count.index}.${var.domain_name}
+EOF
   tags = {
     Name = "worker${count.index}"
     Environment = "${var.environment}"
@@ -58,4 +68,14 @@ resource "aws_instance" "k8s-node_instance" {
     Cost_center = var.environment
     Team = "DevOps"
   }
+}
+
+# Add DNS entry for ressource
+resource "aws_route53_record" "dns_worker" {
+  count = 2
+  zone_id = var.route53_id
+  name = "worker${count.index}.${var.domain_name}"
+  type = "A"
+  ttl = "60"
+  records = ["${element(aws_instance.k8s-node_instance.*.private_ip, count.index)}"]
 }

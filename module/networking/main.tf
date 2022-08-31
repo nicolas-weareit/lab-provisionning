@@ -1,5 +1,18 @@
 #Dedicated networks for the lab
 
+# DHCP option 
+resource "aws_vpc_dhcp_options" "dhcp_options" {
+  domain_name          = var.domain_name
+  domain_name_servers  = ["10.0.1.2"]
+  tags = {
+    Name        = "${var.environment}-dhcp_options"
+    Provisioner = "Terraform"
+    Cost_center = var.environment
+    Team = "DevOps"
+    Environment = var.environment
+  }
+}
+
 # VPC creation
 resource "aws_vpc" "vpc" {
   cidr_block = var.vpc_cidr
@@ -14,6 +27,12 @@ resource "aws_vpc" "vpc" {
     Team = "DevOps"
     Environment = var.environment
   }
+}
+
+# Assign DHCP options to VPC
+resource "aws_vpc_dhcp_options_association" "dhcp" {
+  vpc_id          = aws_vpc.vpc.id
+  dhcp_options_id = aws_vpc_dhcp_options.dhcp_options.id
 }
 
 # Internet Gateway

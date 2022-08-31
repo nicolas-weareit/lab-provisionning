@@ -39,3 +39,11 @@ variable "public_subnets_config" {
 variable "public_security_group" {
   description = "Public subnets dedciated security group"
 }
+
+variable "domain_name" {
+  description = "FQDN to use"
+}
+
+variable "route53_id" {
+  description = "route53 ID"
+}

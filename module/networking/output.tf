@@ -15,3 +15,7 @@ output "default_security_group_id" {
 output "vpc_id" {
   value = aws_vpc.vpc.id
 }
+
+output "dns_id" {
+  value = aws_route53_zone.private.id
+}

@@ -14,6 +14,7 @@ module "Networking" {
   public_subnets_cidr  = var.public_subnets_cidr
   k8s_subnets_cidr = var.k8s_subnets_cidr
   availability_zones   = local.lab_availability_zones
+  domain_name = var.lab_domain_name
 }
 
 module "Security" {
@@ -40,6 +41,8 @@ module "Bastion" {
   instance-type-bastion = var.lab_bastion_instance-type
   public_subnets_config = module.Networking.aws-public-subnets
   public_security_group = module.Security.public_security_group_id
+  domain_name           = var.lab_domain_name
+  route53_id            = module.Networking.dns_id
 }
 
 module "Kube-cluster" {
@@ -60,4 +63,6 @@ module "Kube-cluster" {
   k8s_subnets_config              = module.Networking.aws-k8s-subnets
   k8s-controller_security_group   = module.Security.k8s-controller_security_group_id
   k8s-node_security_group         = module.Security.k8s-node_security_group_id
+  domain_name                     = var.lab_domain_name
+  route53_id                      = module.Networking.dns_id
 }

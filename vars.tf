@@ -64,3 +64,7 @@ variable "lab_instance-type-controller" {
 variable "lab_instance-type-worker" {
   default = ""
 }
+
+variable "lab_domain_name" {
+  default = ""
+}

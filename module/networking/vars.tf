@@ -24,3 +24,7 @@ variable "availability_zones" {
   type        = list
   description = "AZ in which all the resources will be deployed"
 }
+
+variable "domain_name" {
+  description = "FQDN to use"
+}

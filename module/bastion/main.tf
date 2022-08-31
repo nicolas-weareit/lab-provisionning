@@ -7,7 +7,7 @@ data "aws_ami" "devops-bastion-ami" {
     }
     owners = ["${var.ami_owner}"]
 }
-
+# Create bastion server
 resource "aws_instance" "devops_bastion" {
   ami           = data.aws_ami.devops-bastion-ami.id
   # count         = (length(var.availability_zones)-1)
@@ -18,11 +18,13 @@ resource "aws_instance" "devops_bastion" {
   # hibernation   = true
   key_name = "${var.environment}-bastion-key"
   user_data = <<EOF
-  #!/bin/bash
-  echo "Changing Hostname"
-  hostname "bastion${count.index}"
-  echo "bastion${count.index}" > /etc/hostname
-  EOF
+#!/bin/bash -xe
+sudo apt update
+sudo apt upgrade -y
+sudo hostnamectl set-hostname bastion${count.index}.${var.domain_name}
+
+
+EOF
   tags = {
     Name = "bastion${count.index}"
     Environment = "${var.environment}"
@@ -30,4 +32,14 @@ resource "aws_instance" "devops_bastion" {
     Cost_center = var.environment
     Team = "DevOps"
   }
+}
+
+# Add DNS entry for ressource
+resource "aws_route53_record" "dns_bastion" {
+  count = 1
+  zone_id = var.route53_id
+  name = "bastion${count.index}.${var.domain_name}"
+  type = "A"
+  ttl = "60"
+  records = ["${element(aws_instance.devops_bastion.*.private_ip, count.index)}"]
 }

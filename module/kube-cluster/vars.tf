@@ -47,3 +47,11 @@ variable "instance-type-worker" {
 variable "instance-type-controller" {
   description = "Instance type for K8s controller node"
 }
+
+variable "domain_name" {
+  description = "FQDN to use"
+}
+
+variable "route53_id" {
+  description = "route53 ID"
+}
