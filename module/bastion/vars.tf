@@ -47,3 +47,7 @@ variable "domain_name" {
 variable "route53_id" {
   description = "route53 ID"
 }
+
+variable "role_name" {
+  description = "EC2 role name"
+}

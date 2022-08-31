@@ -25,11 +25,17 @@ module "Security" {
   k8s_subnets_cidr = var.k8s_subnets_cidr
   vpc_id = module.Networking.vpc_id
 }
+
+module "IAM_Roles" {
+  source = "./module/IAM_Roles"
+  environment   = var.environment
+}
 module "Bastion" {
   source                = "./module/bastion"
   depends_on            = [
     module.Networking,
-    module.Security
+    module.Security,
+    module.IAM_Roles
   ]
   region                = var.region
   environment           = var.environment
@@ -43,6 +49,7 @@ module "Bastion" {
   public_security_group = module.Security.public_security_group_id
   domain_name           = var.lab_domain_name
   route53_id            = module.Networking.dns_id
+  role_name             = module.IAM_Roles.ec2_profile
 }
 
 module "Kube-cluster" {

@@ -17,6 +17,7 @@ resource "aws_instance" "devops_bastion" {
   vpc_security_group_ids = ["${var.public_security_group}"]
   # hibernation   = true
   key_name = "${var.environment}-bastion-key"
+  iam_instance_profile = var.role_name
   user_data = <<EOF
 #!/bin/bash -xe
 sudo apt update
@@ -27,7 +28,7 @@ wget -q --show-progress --https-only --timestamping \
   https://storage.googleapis.com/kubernetes-the-hard-way/cfssl/1.4.1/linux/cfssljson
 chmod +x cfssl cfssljson
 sudo mv cfssl cfssljson /usr/local/bin/
-
+sudo apt-get install awscli -y
 sudo reboot
 EOF
   tags = {
