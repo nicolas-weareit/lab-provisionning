@@ -16,7 +16,7 @@ resource "aws_instance" "k8s-controller_instance" {
     volume_size = 30
   }
   # hibernation   = true
-  count = 1
+  count = 2
   associate_public_ip_address = true
   subnet_id = element(var.k8s_subnets_config.*.id, count.index)
   vpc_security_group_ids = ["${var.k8s-controller_security_group}"]
@@ -25,10 +25,10 @@ resource "aws_instance" "k8s-controller_instance" {
 #!/bin/bash -xe
 sudo apt update
 sudo apt upgrade -y
-sudo hostnamectl set-hostname controller${count.index}.${var.domain_name}
+sudo hostnamectl set-hostname controller-${count.index}.${var.domain_name}
 EOF
   tags = {
-    Name = "controller${count.index}"
+    Name = "controller-${count.index}"
     Environment = "${var.environment}"
     Provisioner = "Terraform"
     Cost_center = var.environment
@@ -40,7 +40,7 @@ EOF
 resource "aws_route53_record" "dns_controller" {
   count = 1
   zone_id = var.route53_id
-  name = "controller${count.index}.${var.domain_name}"
+  name = "controller-${count.index}.${var.domain_name}"
   type = "A"
   ttl = "60"
   records = ["${element(aws_instance.k8s-controller_instance.*.private_ip, count.index)}"]
@@ -59,10 +59,10 @@ resource "aws_instance" "k8s-node_instance" {
 #!/bin/bash -xe
 sudo apt update
 sudo apt upgrade -y
-sudo hostnamectl set-hostname worker${count.index}.${var.domain_name}
+sudo hostnamectl set-hostname worker-${count.index}.${var.domain_name}
 EOF
   tags = {
-    Name = "worker${count.index}"
+    Name = "worker-${count.index}"
     Environment = "${var.environment}"
     Provisioner = "Terraform"
     Cost_center = var.environment
@@ -74,7 +74,7 @@ EOF
 resource "aws_route53_record" "dns_worker" {
   count = 2
   zone_id = var.route53_id
-  name = "worker${count.index}.${var.domain_name}"
+  name = "worker-${count.index}.${var.domain_name}"
   type = "A"
   ttl = "60"
   records = ["${element(aws_instance.k8s-node_instance.*.private_ip, count.index)}"]
