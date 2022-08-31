@@ -62,8 +62,8 @@ resource "aws_security_group" "k8s_controller" {
     from_port = 6443
     to_port = 6443
     protocol = "tcp"
-    # cidr_blocks = var.public_subnets_cidr
-    security_groups = [aws_security_group.bastion_allowed.id]
+    cidr_blocks = ["0.0.0.0/0"]
+    # security_groups = [aws_security_group.bastion_allowed.id]
   }
 
   ingress {
